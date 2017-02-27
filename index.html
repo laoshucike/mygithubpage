@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+	
+
+<div ng-app="myapp"  ng-controller = "myCtrl" >
+	
+<div class="container-fluid" >
+	<div class="row">
+		<div class="col-lg-2"  >
+			<ul>
+			
+				<li   ng-click="changeSelected(x)"  ng-repeat="x in range(0,sections.length)"   >{{sections[x][0]}}</li>
+				 <form ng-submit="addSection()">
+        		<input type="text" ng-model="newSection"  
+					   placeholder="Add New Section Here" required>
+        		<input class="btn-primary" type="submit" value="Add Section">
+				</form>
+
+			</ul>
+			
+		</div>
+		<div class="col-lg-10">
+			<p>{{sections[selectedSectionIndex][0]}}</p>
+			<p> choices here </p>
+							 <form ng-submit="addField()">
+        		<input type="text" ng-model="newField"  
+					   placeholder="Add New Field Here" required>
+        		<input class="btn-primary" type="submit" value="Add Section">
+				</form>
+			<ol>
+	
+				
+				<li ng-repeat="j in range(0,sections[selectedSectionIndex][1].contents.length)">
+					<ul >
+						<li ng-repeat = "i in range(0,sections[selectedSectionIndex][1].field.length)">
+							{{sections[selectedSectionIndex][1].field[i]}}:<input ng-model="sections[selectedSectionIndex][1].contents[j][i]">
+						</li>
+					</ul>
+				</li>
+				<button ng-click="addContent()">Add</button>
+				
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		footer
+	</div>
+</div>
+</div>
+<script>
+var app = angular.module('myapp',[]);
+app.controller('myCtrl',function($scope){
+	$scope.selectedSectionIndex = 0;
+	$scope.range = function (start, count) {
+      return Array.apply(0, Array(count))
+        .map(function (element, index) { 
+          return index + start;  
+      });
+    }
+	$scope.changeSelected = function(x){
+		$scope.selectedSectionIndex = x;
+	}
+	$scope.addContent =function(){
+		$scope.sections[$scope.selectedSectionIndex][1].contents.push([]);
+	}
+	$scope.addSection=function(){
+		$scope.sections.push([$scope.newSection,{field:["Default"],contents:[[]]}]);
+		$scope.newSection ="";
+	}
+	$scope.addField = function(){
+		$scope.sections[$scope.selectedSectionIndex][1].field.push($scope.newField);
+		$scope.newField="";
+	}
+	$scope.sections = [
+		["basicInformation", {field:["Name","School"],contents:[["David","UIUC"]]}],
+		
+		["Publication",{field:["Title","Authors"],contents :[["Good Job","David"],["HAHA","Tianwei"]]}
+	]]
+		});
+    
+</script>
+
+</body>
+</html>
