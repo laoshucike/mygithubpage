@@ -38,7 +38,6 @@
 	<div class="row">
 		<div class="col-lg-2"  >
 			<ul>
-			
 				<li   ng-click="changeSelected(x)"  ng-repeat="x in range(0,sections.length)"   >{{sections[x][0]}}</li>
 				 <form ng-submit="addSection()">
         		<input type="text" ng-model="newSection"  
@@ -55,7 +54,7 @@
 							 <form ng-submit="addField()">
         		<input type="text" ng-model="newField"  
 					   placeholder="Add New Field Here" required>
-        		<input class="btn-primary" type="submit" value="Add Section">
+        		<input class="btn-primary" type="submit" value="Add Field">
 				</form>
 			<ol>
 	
@@ -104,7 +103,7 @@ app.controller('myCtrl',function($scope){
 	$scope.sections = [
 		["basicInformation", {field:["Name","School"],contents:[["David","UIUC"]]}],
 		
-		["Publication",{field:["Title","Authors"],contents :[["Good Job","David"],["HAHA","Tianwei"]]}
+		["Publication",{field:["Title","Authors"],contents :[["Testing","David"],["Hello World","Tianwei"]]}
 	]]
 		});
     
