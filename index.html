@@ -37,42 +37,72 @@
 <div class="container-fluid" >
 	<div class="row">
 		<div class="col-lg-2"  >
+
 			<ul>
-				<li   ng-click="changeSelected(x)"  ng-repeat="x in range(0,sections.length)"   >{{sections[x][0]}}</li>
+				<div class="list-group">
+					<div ng-repeat="x in range(0,sections.length)">
+  					<a href="" class="list-group-item active"  ng-click="changeSelected(x)" ng-if="x==selectedSectionIndex"  active >{{sections[x][0]}}</a>
+  					<a href="" class="list-group-item" ng-click="changeSelected(x)" ng-if="x!=selectedSectionIndex"   >{{sections[x][0]}}</a>
+  			
+  					</div>
+				</div>
+
+
 				 <form ng-submit="addSection()">
         		<input type="text" ng-model="newSection"  
 					   placeholder="Add New Section Here" required>
-        		<input class="btn-primary" type="submit" value="Add Section">
+        		<input class="btn btn-primary" type="submit" value="Add Section">
 				</form>
 
 			</ul>
 			
 		</div>
 		<div class="col-lg-10">
-			<p>{{sections[selectedSectionIndex][0]}}</p>
+			<input class="input-lg focus" ng-model="sections[selectedSectionIndex][0]"> 
+			<button class="btn btn-danger" ng-click="removeSection()">Remove Section</button>
 			<p> choices here </p>
-							 <form ng-submit="addField()">
+			<button type="button" class="btn btn-primary" ng-click="editField()">Edit Fields</button>
+			<div ng-if="editFieldFlag">
+				<div ng-repeat="i in range(0,sections[selectedSectionIndex][1].field.length)">
+					<input ng-model="sections[selectedSectionIndex][1].field[i]">
+					<button type="button" class="btn btn-danger" ng-click="deleteField(i)">Delete</button> 
+				</div>
+
+			</div>
+			<div ng-show="editFieldFlag">
+				<form ng-submit="addField()">
+							 
         		<input type="text" ng-model="newField"  
 					   placeholder="Add New Field Here" required>
-        		<input class="btn-primary" type="submit" value="Add Field">
+        		<input class="btn btn-primary" type="submit" value="Add Field">
 				</form>
+			</div>
 			<ol>
-	
-				
-				<li ng-repeat="j in range(0,sections[selectedSectionIndex][1].contents.length)">
+		
+				<div ng-repeat="j in range(0,sections[selectedSectionIndex][1].contents.length)">
+							<span class="checkbox-inline">
+  						<label><input type="checkbox" ng-model="checkedIndexes[j]"></label>
+					</span>
+				<li >
+
 					<ul >
+					
 						<li ng-repeat = "i in range(0,sections[selectedSectionIndex][1].field.length)">
-							{{sections[selectedSectionIndex][1].field[i]}}:<input ng-model="sections[selectedSectionIndex][1].contents[j][i]">
+				
+							<span>
+							{{sections[selectedSectionIndex][1].field[i]}}:<input ng-model="sections[selectedSectionIndex][1].contents[j][sections[selectedSectionIndex][1].field[i]]">
+							</span>
 						</li>
 					</ul>
 				</li>
-				<button ng-click="addContent()">Add</button>
-				
+
+				</div>
+				<button type="button" class="btn btn-danger" ng-click="deleteContent()">Delete Content</button>
+				<button type="button" class="btn btn-primary" ng-click="addContent()">Add Content</button>
 			</ol>
 		</div>
 	</div>
 	<div class="row">
-		footer
 	</div>
 </div>
 </div>
@@ -80,6 +110,30 @@
 var app = angular.module('myapp',[]);
 app.controller('myCtrl',function($scope){
 	$scope.selectedSectionIndex = 0;
+	$scope.editFieldFlag = false;
+	$scope.editSectionFlag = false;
+	$scope.sections = [
+		["basicInformation", {
+			field:["Name","School"],
+			hiddenField:[],
+			contents:[{
+				"Name":"David",
+				"School":"UIUC"}]
+
+		}],
+		
+		["Publication",{
+			field:["Title","Authors"],
+			hiddenField:[],
+			contents :[{"Title":"Testing","Authors":"David"},
+			{"Title":"Hello World","Authors":"Tianwei"}
+			]
+		}
+	]]
+	$scope.checkedIndexes = [];
+	for(var i=0;i<100;i++){
+		$scope.checkedIndexes.push(false);
+	}
 	$scope.range = function (start, count) {
       return Array.apply(0, Array(count))
         .map(function (element, index) { 
@@ -100,12 +154,31 @@ app.controller('myCtrl',function($scope){
 		$scope.sections[$scope.selectedSectionIndex][1].field.push($scope.newField);
 		$scope.newField="";
 	}
-	$scope.sections = [
-		["basicInformation", {field:["Name","School"],contents:[["David","UIUC"]]}],
-		
-		["Publication",{field:["Title","Authors"],contents :[["Testing","David"],["Hello World","Tianwei"]]}
-	]]
-		});
+	$scope.editField = function(){
+		$scope.editFieldFlag = !$scope.editFieldFlag;
+	}
+	$scope.deleteField = function(x){
+		$scope.sections[$scope.selectedSectionIndex][1].field.splice(x,1);
+	}
+	$scope.editSection = function(){
+		$scope.editSectionFlag = !$scope.editSectionFlag;
+	}
+	$scope.deleteContent = function(){
+		var counts = 0;
+		for(var i=0;i<$scope.sections[$scope.selectedSectionIndex][1].contents.length;i++){
+			if($scope.checkedIndexes[i]==true){
+				$scope.sections[$scope.selectedSectionIndex][1].contents.splice(i-counts,1);
+				counts++;
+				$scope.checkedIndexes[i]=false;
+			}
+		}
+	}
+	$scope.removeSection = function(){
+		if($scope.sections.length==1) return;
+		$scope.sections.splice($scope.selectedSectionIndex,1);
+		$scope.selectedSectionIndex = 0;
+	}
+});
     
 </script>
 
