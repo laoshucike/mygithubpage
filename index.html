@@ -5,6 +5,11 @@
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+	ol li{
+
+}
+</style>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -80,12 +85,13 @@
 			<ol>
 		
 				<div ng-repeat="j in range(0,sections[selectedSectionIndex][1].contents.length)">
-							<span class="checkbox-inline">
-  						<label><input type="checkbox" ng-model="checkedIndexes[j]"></label>
-					</span>
-				<li >
-
-					<ul >
+				<span>
+  					<input style="float: left; position: relative; left: -20px;" type="checkbox" ng-model="checkedIndexes[j]">
+				</span>
+				
+				<span>
+				<li style="">							
+					<ul>
 					
 						<li ng-repeat = "i in range(0,sections[selectedSectionIndex][1].field.length)">
 				
@@ -95,6 +101,7 @@
 						</li>
 					</ul>
 				</li>
+				</span>
 
 				</div>
 				<button type="button" class="btn btn-danger" ng-click="deleteContent()">Delete Content</button>
@@ -141,7 +148,11 @@ app.controller('myCtrl',function($scope){
       });
     }
 	$scope.changeSelected = function(x){
+		for(var i=0;i<$scope.sections[$scope.selectedSectionIndex][1].contents.length;i++){
+			$scope.checkedIndexes[i]=false;
+		}
 		$scope.selectedSectionIndex = x;
+		$scope.editFieldFlag = false;
 	}
 	$scope.addContent =function(){
 		$scope.sections[$scope.selectedSectionIndex][1].contents.push([]);
